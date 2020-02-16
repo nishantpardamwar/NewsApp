@@ -1,7 +1,5 @@
 package com.nishant.newsapp.home
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
@@ -64,14 +62,11 @@ class HomeActivity : AppCompatActivity() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                if (newText?.nonEmptyStringOrNull() != null)
-                    vm?.fetchNewsData(newText)
-                else
-                    vm?.fetchTopHeadlines()
+                vm?.fetchNewsData(newText)
                 return true
             }
         })
 
-        vm?.fetchTopHeadlines()
+        vm?.fetchNewsData()
     }
 }

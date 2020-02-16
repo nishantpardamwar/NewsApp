@@ -36,16 +36,12 @@ class HomeDataSource(context: Context) {
     }
 
     suspend fun getNews(
-        query: String? = null,
-        fromDate: String,
-        sortBy: String
+        query: String
     ): Flow<NewsResponse> {
         return flow {
             val response = NetworkClient.client.getNews(
                 API_KEY,
-                if (query == null) "" else query,
-                fromDate,
-                sortBy
+                query
             )
 
             successOrThrow(response, this)

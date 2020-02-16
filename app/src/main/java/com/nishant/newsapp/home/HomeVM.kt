@@ -21,21 +21,7 @@ class HomeVM(application: Application) : AndroidViewModel(application) {
 
     private var apiJob: Job? = null
 
-    fun fetchTopHeadlines() {
-        apiJob?.cancel()
-        apiJob = viewModelScope.launch() {
-            newsLiveData.loading()
-            repo.fetchTopHeadlines()
-                .catch { error ->
-                    newsLiveData.failure(error)
-                }
-                .collect {
-                    newsLiveData.success(it)
-                }
-        }
-    }
-
-    fun fetchNewsData(query: String? = "") {
+    fun fetchNewsData(query: String? = null) {
         apiJob?.cancel()
         apiJob = viewModelScope.launch() {
             newsLiveData.loading()
@@ -47,9 +33,5 @@ class HomeVM(application: Application) : AndroidViewModel(application) {
                     newsLiveData.success(it)
                 }
         }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
     }
 }
