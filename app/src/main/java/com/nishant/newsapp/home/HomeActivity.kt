@@ -5,6 +5,7 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.nishant.newsapp.R
 import com.nishant.newsapp.ResultWrapper
@@ -27,7 +28,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun init() {
-        vm = HomeVM(this.application)
+        vm = ViewModelProvider.AndroidViewModelFactory(this.application).create(HomeVM::class.java)
 
         vm?.newsLiveData?.observe(this, Observer { result ->
 

@@ -16,6 +16,10 @@ You will require Android Studio 3.0 (or newer).
 - Find the file named `HomeDataSource` and replace `YOUR_API_KEY` with your api key
 - Build app and enjoy :)
 
+# Architecture
+
+<img alt="NewsApp Home" height="450px" src="https://raw.githubusercontent.com/nishantpardamwar/NewsApp/master/screenshot/architecture.png" />
+
 # Libraries and Services Used
 
 ### Libraries
