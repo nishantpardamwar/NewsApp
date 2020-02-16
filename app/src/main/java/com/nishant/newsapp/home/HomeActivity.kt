@@ -7,7 +7,9 @@ import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.nishant.newsapp.R
+import com.nishant.newsapp.ResultWrapper
 import com.nishant.newsapp.isVisible
+import com.nishant.newsapp.model.NewsResponse
 import com.nishant.newsapp.nonEmptyStringOrNull
 import kotlinx.android.synthetic.main.activity_home.*
 
@@ -21,38 +23,24 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
+        init()
+    }
+
+    private fun init() {
         vm = HomeVM(this.application)
 
         vm?.newsLiveData?.observe(this, Observer { result ->
-            if (result.isLoading()) {
-                txt_info.isVisible = true
-                txt_info.text = "Loading"
-            } else if (result.isSuccess()) {
-                if (result.data?.articles?.isNotEmpty() == true) {
-                    if (adapter == null) {
-                        adapter = NewsAdapter(result.data.articles)
-                        recyclewView.adapter = adapter
-                        if (recyclewView.itemDecorationCount == 0) {
-                            recyclewView.addItemDecoration(
-                                DividerItemDecoration(
-                                    this,
-                                    LinearLayout.VERTICAL
-                                )
-                            )
-                        }
-                    } else {
-                        adapter?.updateData(result.data.articles)
-                    }
-                    txt_info.isVisible = false
-                } else {
-                    txt_info.isVisible = true
-                    txt_info.text = "No Search Results found for \"${searchView.query}\""
+
+            handleLoading(result.isLoading)
+
+            when (result.state) {
+                ResultWrapper.State.SUCCESS -> {
+                    handleSuccess(result.data)
                 }
-            } else {
-                val errorMessage =
-                    result.error?.message.nonEmptyStringOrNull() ?: "Something went wrong."
-                txt_info.text = errorMessage
-                txt_info.isVisible = true
+
+                ResultWrapper.State.FAILURE -> {
+                    handleError(result.error)
+                }
             }
         })
 
@@ -68,5 +56,42 @@ class HomeActivity : AppCompatActivity() {
         })
 
         vm?.fetchNewsData()
+    }
+
+    private fun handleLoading(isLoading: Boolean) {
+        if (isLoading) {
+            txt_info.isVisible = true
+            txt_info.text = "Loading"
+        } else {
+            txt_info.isVisible = false
+        }
+    }
+
+    private fun handleSuccess(data: NewsResponse?) {
+        if (data?.articles?.isNotEmpty() == true) {
+            if (adapter == null) {
+                adapter = NewsAdapter(data.articles)
+                recyclewView.adapter = adapter
+                if (recyclewView.itemDecorationCount == 0) {
+                    recyclewView.addItemDecoration(
+                        DividerItemDecoration(
+                            this,
+                            LinearLayout.VERTICAL
+                        )
+                    )
+                }
+            } else {
+                adapter?.updateData(data.articles)
+            }
+        } else {
+            txt_info.isVisible = true
+            txt_info.text = "No Search Results found for \"${searchView.query}\""
+        }
+    }
+
+    private fun handleError(error: Throwable?) {
+        val errorMessage = error?.message.nonEmptyStringOrNull() ?: "Something went wrong."
+        txt_info.text = errorMessage
+        txt_info.isVisible = true
     }
 }
