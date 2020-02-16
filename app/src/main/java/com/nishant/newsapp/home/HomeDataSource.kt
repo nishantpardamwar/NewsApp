@@ -3,6 +3,7 @@ package com.nishant.newsapp.home
 import android.content.Context
 import com.nishant.newsapp.model.NewsResponse
 import com.nishant.newsapp.network.NetworkClient
+import com.nishant.newsapp.network.NetworkException
 import com.nishant.newsapp.nonEmptyStringOrNull
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
@@ -12,6 +13,8 @@ import retrofit2.Response
 
 class HomeDataSource(context: Context) {
     private val API_KEY = "YOUR_API_KEY"
+
+    private val DEFAULT_COUNTRY = "in" //india
 
     suspend fun getCountryCode(): Flow<String> {
         return flow {
@@ -23,8 +26,8 @@ class HomeDataSource(context: Context) {
                     return@flow
                 }
             }
-            emit("in")
-        }.catch { emit("in") }
+            emit(DEFAULT_COUNTRY)
+        }.catch { emit(DEFAULT_COUNTRY) }
     }
 
     suspend fun getTopHeadlines(country: String): Flow<NewsResponse> {
@@ -60,6 +63,11 @@ class HomeDataSource(context: Context) {
         val errorMessage =
             response.errorBody()?.string()?.nonEmptyStringOrNull()
                 ?: "Something went wrong."
-        throw Exception(errorMessage)
+
+        throw NetworkException(
+            response.code(),
+            response.raw().request().url().toString(),
+            errorMessage
+        )
     }
 }

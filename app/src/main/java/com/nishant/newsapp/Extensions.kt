@@ -32,14 +32,14 @@ fun String?.nonEmptyStringOrNull(): String? {
     return if (this != null && this.trim().length > 0) this else null
 }
 
-fun <T, E : Throwable> MutableLiveData<ResultWrapper<T, E>>?.loading() {
+fun <T, E : Throwable> MutableLiveData<ResultWrapper<T, E>>.loading() {
     if (this != null) value = ResultWrapper.loading()
 }
 
-fun <T, E : Throwable> MutableLiveData<ResultWrapper<T, E>>?.success(data: T) {
+fun <T, E : Throwable> MutableLiveData<ResultWrapper<T, E>>.success(data: T) {
     if (this != null) value = ResultWrapper.success(data)
 }
 
-fun <T, E : Throwable> MutableLiveData<ResultWrapper<T, E>>?.failure(error: E) {
+fun <T, E : Throwable> MutableLiveData<ResultWrapper<T, E>>.failure(error: E) {
     if (this != null) value = ResultWrapper.failure(error)
 }
