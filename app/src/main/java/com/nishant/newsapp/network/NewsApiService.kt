@@ -1,11 +1,16 @@
 package com.nishant.newsapp.network
 
+import com.nishant.newsapp.model.IpInfoResponse
 import com.nishant.newsapp.model.NewsResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
+import retrofit2.http.Url
 
 interface NewsApiService {
+
+    @GET
+    suspend fun getIpInfo(@Url url: String): Response<IpInfoResponse>
 
     @GET("/v2/top-headlines")
     suspend fun getTopHeadlines(

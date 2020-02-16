@@ -6,11 +6,26 @@ import com.nishant.newsapp.network.NetworkClient
 import com.nishant.newsapp.nonEmptyStringOrNull
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import retrofit2.Response
 
 class HomeDataSource(context: Context) {
     private val API_KEY = "YOUR_API_KEY"
+
+    suspend fun getCountryCode(): Flow<String> {
+        return flow {
+            val response = NetworkClient.client.getIpInfo("http://ip-api.com/json")
+
+            if (response.isSuccessful) {
+                response.body()?.let {
+                    emit(it.countryCode.toLowerCase())
+                    return@flow
+                }
+            }
+            emit("in")
+        }.catch { emit("in") }
+    }
 
     suspend fun getTopHeadlines(country: String): Flow<NewsResponse> {
         return flow {
