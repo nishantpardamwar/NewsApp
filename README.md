@@ -1,7 +1,11 @@
 NewsApp is simple App which uses [NewsAPI](https://newsapi.org/) to get top headlines for country you live in or you can search for a specific news.
 Focus of this app is to demonstrate (Not necessarily the best practices)
 
-- MVVM Artitecture with Kotlin Flow and LiveData
+- MVVM Architecture with Kotlin Flow and LiveData
+
+# Screenshots
+
+<img alt="NewsApp Home" height="450px" src="https://raw.githubusercontent.com/nishantpardamwar/NewsApp/master/screenshot/screen1.png" /> <img alt="NewsApp Search" height="450px" src="https://raw.githubusercontent.com/nishantpardamwar/NewsApp/master/screenshot/screen2.png" />
 
 
 # Setup
