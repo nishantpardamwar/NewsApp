@@ -2,6 +2,7 @@ NewsApp is simple App which uses [NewsAPI](https://newsapi.org/) to get top head
 Focus of this app is to demonstrate (Not necessarily the best practices)
 
 - MVVM Architecture with Kotlin Flow and LiveData
+- Android View Binding
 
 # Screenshots
 
