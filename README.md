@@ -28,6 +28,7 @@ You will require Android Studio 3.0 (or newer).
 - Glide
 - Kotlin Coroutines/Flow
 - ViewModel and LiveData
+- Android View Binding
 
 ### Services
 - [NewsAPI](https://newsapi.org/)
