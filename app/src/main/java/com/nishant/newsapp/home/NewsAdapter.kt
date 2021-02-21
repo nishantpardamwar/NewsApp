@@ -8,18 +8,17 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.nishant.newsapp.R
+import com.nishant.newsapp.databinding.VhArticleBinding
 import com.nishant.newsapp.getDisplayDate
 import com.nishant.newsapp.model.Articles
 import com.nishant.newsapp.nonEmptyStringOrNull
-import kotlinx.android.synthetic.main.vh_article.view.*
 
 class NewsAdapter(private var list: List<Articles>) :
     RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.vh_article, parent, false)
+            VhArticleBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 
@@ -36,9 +35,10 @@ class NewsAdapter(private var list: List<Articles>) :
         notifyDataSetChanged()
     }
 
-    inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(val viewBinding: VhArticleBinding) :
+        RecyclerView.ViewHolder(viewBinding.root) {
         init {
-            view.setOnClickListener {
+            viewBinding.root.setOnClickListener {
                 list.getOrNull(adapterPosition)?.let { article ->
                     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(article.url))
                     it.context.startActivity(intent)
@@ -48,13 +48,13 @@ class NewsAdapter(private var list: List<Articles>) :
 
         fun bind(position: Int) {
             list.getOrNull(position)?.let { article ->
-                view.txt_title.text = article.title
-                view.txt_author.text = article.author
-                view.txt_description.text = article.description
-                view.txt_publish_date.text =
+                viewBinding.txtTitle.text = article.title
+                viewBinding.txtAuthor.text = article.author
+                viewBinding.txtDescription.text = article.description
+                viewBinding.txtPublishDate.text =
                     getDisplayDate(article.publishedAt).nonEmptyStringOrNull() ?: ""
 
-                Glide.with(view.image).load(article.urlToImage).into(view.image)
+                Glide.with(viewBinding.image).load(article.urlToImage).into(viewBinding.image)
             }
         }
     }

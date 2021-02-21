@@ -1,6 +1,7 @@
 package com.nishant.newsapp.home
 
 import android.os.Bundle
+import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -9,20 +10,21 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.nishant.newsapp.R
 import com.nishant.newsapp.ResultWrapper
+import com.nishant.newsapp.databinding.ActivityHomeBinding
 import com.nishant.newsapp.isVisible
 import com.nishant.newsapp.model.NewsResponse
 import com.nishant.newsapp.nonEmptyStringOrNull
-import kotlinx.android.synthetic.main.activity_home.*
-
 
 class HomeActivity : AppCompatActivity() {
 
+    private var viewBinding: ActivityHomeBinding? = null
     private var vm: HomeVM? = null
     private var adapter: NewsAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
+        viewBinding = ActivityHomeBinding.inflate(layoutInflater)
+        setContentView(viewBinding?.root)
 
         init()
     }
@@ -45,7 +47,7 @@ class HomeActivity : AppCompatActivity() {
             }
         })
 
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        viewBinding?.searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
             }
@@ -61,10 +63,10 @@ class HomeActivity : AppCompatActivity() {
 
     private fun handleLoading(isLoading: Boolean) {
         if (isLoading) {
-            txt_info.isVisible = true
-            txt_info.text = "Loading"
+            viewBinding?.txtInfo?.isVisible = true
+            viewBinding?.txtInfo?.text = "Loading"
         } else {
-            txt_info.isVisible = false
+            viewBinding?.txtInfo?.isVisible = false
         }
     }
 
@@ -72,9 +74,9 @@ class HomeActivity : AppCompatActivity() {
         if (data?.articles?.isNotEmpty() == true) {
             if (adapter == null) {
                 adapter = NewsAdapter(data.articles)
-                recyclewView.adapter = adapter
-                if (recyclewView.itemDecorationCount == 0) {
-                    recyclewView.addItemDecoration(
+                viewBinding?.recyclewView?.adapter = adapter
+                if (viewBinding?.recyclewView?.itemDecorationCount == 0) {
+                    viewBinding?.recyclewView?.addItemDecoration(
                         DividerItemDecoration(
                             this,
                             LinearLayout.VERTICAL
@@ -85,14 +87,15 @@ class HomeActivity : AppCompatActivity() {
                 adapter?.updateData(data.articles)
             }
         } else {
-            txt_info.isVisible = true
-            txt_info.text = "No Search Results found for \"${searchView.query}\""
+            viewBinding?.txtInfo?.isVisible = true
+            viewBinding?.txtInfo?.text =
+                "No Search Results found for \"${viewBinding?.searchView?.query}\""
         }
     }
 
     private fun handleError(error: Throwable?) {
         val errorMessage = error?.message.nonEmptyStringOrNull() ?: "Something went wrong."
-        txt_info.text = errorMessage
-        txt_info.isVisible = true
+        viewBinding?.txtInfo?.text = errorMessage
+        viewBinding?.txtInfo?.isVisible = true
     }
 }

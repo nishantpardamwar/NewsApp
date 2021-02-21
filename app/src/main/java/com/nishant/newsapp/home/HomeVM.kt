@@ -9,6 +9,7 @@ import com.nishant.newsapp.failure
 import com.nishant.newsapp.loading
 import com.nishant.newsapp.model.NewsResponse
 import com.nishant.newsapp.success
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
@@ -23,7 +24,7 @@ class HomeVM(application: Application) : AndroidViewModel(application) {
 
     fun fetchNewsData(query: String? = null) {
         apiJob?.cancel()
-        apiJob = viewModelScope.launch() {
+        apiJob = viewModelScope.launch(Dispatchers.IO) {
             newsLiveData.loading()
             repo.fetchNews(query)
                 .catch { error ->
